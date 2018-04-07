@@ -30,6 +30,7 @@ class CCGXController(object):
 
     def run(self):
 
+        print 'Main loop started'
         PrevSOC = 75
         SOC = 75
         WsConnect = False
