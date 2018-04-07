@@ -28,7 +28,7 @@ class CCGXController(object):
         print inputpower
 
 
-    def Run(self):
+    def run(self):
 
         PrevSOC = 75
         SOC = 75
@@ -93,5 +93,6 @@ class CCGXController(object):
 
 
 if __name__ == "__main__":
-    controller = CCGXController
-    controller
+    controller = CCGXController()
+    controller.run()
+
