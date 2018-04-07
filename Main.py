@@ -90,7 +90,7 @@ class CCGXController(object):
             # Send the inputpower to the CCGX
             self.setvalues(InPower)
 
-            time.sleep(.1)
+            time.sleep(2)
 
 
 if __name__ == "__main__":
