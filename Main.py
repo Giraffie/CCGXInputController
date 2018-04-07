@@ -1,20 +1,28 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 
 import dbus
-import pydbus
 import time
 
 class CCGXController(object):
 
     def __init__(self):
-        selfbus = pydbus.SystemBus()
+        self.bus = dbus.SystemBus()
 
     def getvalues(self):
 
-        proxy = self.bus.get('com.victronenergy.settings',
-                        '/Settings/CGwacs/AcPowerSetPoint')
-        value = proxy
-        return value
+        try:
+            remote_object = self.bus.get_object("com.victronenergy.settings",
+                                           "/Settings/CGwacs/AcPowerSetPoint")
+            print remote_object
+        except dbus.DBusException:
+            print 'Error with DBus'
+
+        SOC = 75
+        L1 = 0
+        L2 = 0
+        L3 = 0
+        values = [SOC, L1, L2, L3]
+        return values
 
     def setvalues(self,inputpower):
         print inputpower
@@ -27,18 +35,18 @@ class CCGXController(object):
         WsConnect = False
         InPower = 3000
         OutPower = 2000
-
+        MinIn = 200
 
 
         while True:
 
             #Get updated SOC Value
+            values = self.getvalues()
             PrevSOC = SOC
-            SOC = self.getvalues()
-            L1Out = self.getvalues()
-            L2Out = self.getvalues()
-            L3Out = self.getvalues()
-            MinIn = 200
+            SOC = values[0]
+            L1Out = values[1]
+            L2Out = values[2]
+            L3Out = values[3]
             OutPower = L1Out + L2Out + L3Out
 
 
