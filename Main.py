@@ -47,9 +47,14 @@ class CCGXController(object):
                         path=self.DbusServices[service]['Path'],
                         eventCallback=None,
                         createsignal=False).get_value()
-
             except dbus.DBusException:
                 print 'Error with DBus'
+
+            try:
+                self.DbusServices[service]['Value'] *= 1
+
+            except:
+                self.DbusServices[service]['Value'] = 0
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
                   self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
