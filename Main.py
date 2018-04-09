@@ -19,9 +19,15 @@ class CCGXController(object):
             'Soc':{'Service':"com.victronenergy.vebus",
                    'Path':"/Soc",
                    'Value':0},
-            'L1Power':["com.victronenergy.vebus", "/Ac/Out/L1/P"],
-            'L2Power': ["com.victronenergy.vebus", "/Ac/Out/L2/P"],
-            'L3Power': ["com.victronenergy.vebus", "/Ac/Out/L3/P"],
+            'L1Power':{'Service':"com.victronenergy.vebus",
+                   'Path':"/Ac/Out/L1/P",
+                   'Value':0},
+            'L2Power': {'Service':"com.victronenergy.vebus",
+                   'Path':"/Ac/Out/L2/P",
+                   'Value':0},
+            'L3Power':{'Service':"com.victronenergy.vebus",
+                   'Path':"/Ac/Out/L3/P",
+                   'Value':0}
         }
 
     def getvalues(self):
