@@ -58,6 +58,12 @@ class CCGXController(object):
         return values
 
     def setvalues(self,inputpower):
+        VeDbusItemImport(
+            bus=self.bus,
+            serviceName=self.DbusServices['AcSetpoint']['Service'],
+            path=self.DbusServices['AcSetpoint']['Path'],
+            eventCallback=None,
+            createsignal=False).set_value(inputpower)
         print inputpower
 
 
