@@ -54,7 +54,7 @@ class CCGXController(object):
                 self.DbusServices[service]['Value'] *= 1
 
             except:
-                self.DbusServices[service]['Value'] = 0
+                self.DbusServices[service]['Value'] = 300
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
                   self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
