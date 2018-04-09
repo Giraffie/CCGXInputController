@@ -50,7 +50,7 @@ class CCGXController(object):
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
                   self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
-        print self.DbusServices['Soc']['Value'] + 1
+        print self.DbusServices['Soc']['Value']
         return values
 
     def setvalues(self,inputpower):
