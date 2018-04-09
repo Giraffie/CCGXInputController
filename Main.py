@@ -50,11 +50,12 @@ class CCGXController(object):
             except dbus.DBusException:
                 print 'Error with DBus'
 
-            try:
-                self.DbusServices[service]['Value'] *= 1
+            if service == 'L1Power':
+                try:
+                    self.DbusServices[service]['Value'] *= 1
 
-            except:
-                self.DbusServices[service]['Value'] = 300
+                except:
+                    self.DbusServices[service]['Value'] = 300
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
                   self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
