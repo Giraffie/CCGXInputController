@@ -43,7 +43,7 @@ class CCGXController(object):
                         serviceName=self.DbusServices[service]['Service'],
                         path=self.DbusServices[service]['Path'],
                         eventCallback=None,
-                        createsignal=False)
+                        createsignal=False).get_value()
 
             except dbus.DBusException:
                 print 'Error with DBus'
