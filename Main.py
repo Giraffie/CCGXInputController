@@ -58,7 +58,7 @@ class CCGXController(object):
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
                     self.DbusServices[service]['Value'] = 300
                 elif service == 'Soc':
-                    self.DbusServices[service]['Value'] = 80
+                    self.DbusServices[service]['Value'] = 84
 
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
@@ -99,14 +99,14 @@ class CCGXController(object):
             L3Out = values[3]
             OutPower = L1Out + L2Out + L3Out
 
-            WsconSoc = 84
+            WsConSoc = 84
             StableBatterySoc = 81
 
 
             # Set the correct flag for WsConnect
-            if (SOC == WsconSoc and PrevSOC == WsconSoc - 1):
+            if SOC >= WsConSoc:
                 WsConnect = True
-            if (SOC == WsconSoc - 2 and PrevSOC == WsconSoc - 1):
+            if SOC <= WsConSoc - 2:
                 WsConnect = False
 
             # Set Correct Maxin Value based on if Ws is connected or not
