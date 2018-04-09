@@ -50,17 +50,21 @@ class CCGXController(object):
             except dbus.DBusException:
                 print 'Error with DBus'
 
-            if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
-                try:
-                    self.DbusServices[service]['Value'] *= 1
 
-                except:
+            try:
+                self.DbusServices[service]['Value'] *= 1
+
+            except:
+                if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
                     self.DbusServices[service]['Value'] = 300
+                elif service == 'Soc':
+                    self.DbusServices[service]['Value'] = 80
+
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
                   self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
+
         print self.DbusServices['Soc']['Value']
-        print self.DbusServices['AcSetpoint']['Value']
         return values
 
     def setvalues(self,inputpower):
