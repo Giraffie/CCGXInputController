@@ -16,7 +16,7 @@ class CCGXController(object):
     def __init__(self):
         self.bus = dbus.SystemBus()
         self.DbusServices = {
-            'Soc':{'Service':"com.victronenergy.settings",
+            'AcSetpoint':{'Service':"com.victronenergy.settings",
                    'Path':"/Settings/CGwacs/AcPowerSetPoint",
                    'Value':0},
             'L1Power':{'Service':"com.victronenergy.vebus",
@@ -27,6 +27,9 @@ class CCGXController(object):
                    'Value':0},
             'L3Power':{'Service':"com.victronenergy.vebus",
                    'Path':"/Ac/Out/L3/P",
+                   'Value':0},
+            'Soc':{'Service':"com.victronenergy.vebus",
+                   'Path':"/Soc",
                    'Value':0}
         }
 
@@ -51,6 +54,7 @@ class CCGXController(object):
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
                   self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
         print self.DbusServices['Soc']['Value']
+        print self.DbusServices['AcSetpoint']['Value']
         return values
 
     def setvalues(self,inputpower):
