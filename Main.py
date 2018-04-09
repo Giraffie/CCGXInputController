@@ -1,27 +1,49 @@
 #!/usr/bin/env python
 
+# Imports
 import dbus
 import time
+import os
+import sys
+
+# Victron Imports
+sys.path.insert(1, os.path.join(os.path.dirname(__file__), './ext/velib_python'))
+from vedbus import VeDbusItemImport
+from vedbus import VeDbusItemExport
 
 class CCGXController(object):
 
     def __init__(self):
         self.bus = dbus.SystemBus()
+        self.DbusServices = {
+            'Soc':{'Service':"com.victronenergy.vebus",
+                   'Path':"/Soc",
+                   'Value':0},
+            'L1Power':["com.victronenergy.vebus", "/Ac/Out/L1/P"],
+            'L2Power': ["com.victronenergy.vebus", "/Ac/Out/L2/P"],
+            'L3Power': ["com.victronenergy.vebus", "/Ac/Out/L3/P"],
+        }
 
     def getvalues(self):
 
-        try:
-            remote_object = self.bus.get_object("com.victronenergy.settings",
-                                           "/Settings/CGwacs/AcPowerSetPoint")
-            print remote_object
-        except dbus.DBusException:
-            print 'Error with DBus'
+        # Services to get values from
+        # Syntax is {'Name':[
 
-        SOC = 75
-        L1 = 0
-        L2 = 0
-        L3 = 0
-        values = [SOC, L1, L2, L3]
+        for service in self.DbusServices:
+
+            try:
+                self.DbusServices[service]['Value']= VeDbusItemImport(
+                        bus=self.bus,
+                        serviceName=self.DbusServices[service]['Service'],
+                        path=self.DbusServices[service]['Path'],
+                        eventCallback=None,
+                        createsignal=False)
+
+            except dbus.DBusException:
+                print 'Error with DBus'
+
+        values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
+                  self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
         return values
 
     def setvalues(self,inputpower):
@@ -50,11 +72,14 @@ class CCGXController(object):
             L3Out = values[3]
             OutPower = L1Out + L2Out + L3Out
 
+            WsconSoc = 84
+            StableBatterySoc = 81
+
 
             # Set the correct flag for WsConnect
-            if (SOC == 84 and PrevSOC == 83):
+            if (SOC == WsconSoc and PrevSOC == WsconSoc - 1):
                 WsConnect = True
-            if (SOC == 82 and PrevSOC == 83):
+            if (SOC == WsconSoc - 2 and PrevSOC == WsconSoc - 1):
                 WsConnect = False
 
             # Set Correct Maxin Value based on if Ws is connected or not
@@ -64,18 +89,18 @@ class CCGXController(object):
                 MaxIn = OutPower + 200
 
             # Determine the correct inputpower
-            if (SOC < 75):
+            if (SOC < StableBatterySoc - 5):
                 InPower = 1.2 * OutPower + 200
-            elif SOC == 81:
+            elif SOC == StableBatterySoc:
                 InPower = 1.0 * OutPower + 200
-            elif SOC == 82:
+            elif SOC == StableBatterySoc + 1:
                 InPower = 0.8 * OutPower + 200
-            elif SOC == 83:
+            elif SOC == StableBatterySoc + 2:
                 InPower = 0.6 * OutPower + 200
-            elif SOC == 84:
+            elif SOC == StableBatterySoc + 3:
                 InPower = 0.4 * OutPower + 200
-            elif SOC > 84:
-                InPower = 0.3 * OutPower + 200
+            elif SOC > StableBatterySoc + 3:
+                InPower = 0.2 * OutPower + 200
 
             #Constrain the maximum input power
             InPower = min(InPower,MaxIn)
