@@ -126,7 +126,7 @@ class CCGXController(object):
                 InPower = 0.6 * OutPower + 200
             elif SOC == StableBatterySoc + 3:
                 InPower = 0.4 * OutPower + 200
-            elif SOC > StableBatterySoc + 3:
+            elif SOC >= StableBatterySoc + 4:
                 InPower = 0.2 * OutPower + 200
 
             #Constrain the maximum input power
