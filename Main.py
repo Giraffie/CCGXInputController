@@ -84,6 +84,7 @@ class CCGXController(object):
 
 
             try:
+                self.DbusServices[service]['Value'] *= 1
                 self.DbusServices[service]['Value'] = max(self.DbusServices[service]['Value'], 0)
                 print service, self.DbusServices[service]['Value']
 
