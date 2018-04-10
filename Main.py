@@ -34,9 +34,9 @@ class CCGXController(object):
                    'Value':0}
         }
         self.AbsorptionSettings = {
-            'WeekDay': 6,
-            'StartTime': datetime.time(hour=17),
-            'Duration': datetime.timedelta(hours=8),
+            'WeekDay': 1,
+            'StartTime': datetime.time(hour=9, minute=50),
+            'Duration': datetime.timedelta(minutes=2),
             'Date': datetime.date.today(),
             'EndTime': datetime.datetime.now(),
             'Interval': datetime.timedelta(weeks=2),
@@ -100,7 +100,7 @@ class CCGXController(object):
             path=self.DbusServices['AcSetpoint']['Path'],
             eventCallback=None,
             createsignal=False).set_value(inputpower)
-        print 'Inputpower:', inputpower
+        # print 'Inputpower:', inputpower
 
 
     def run(self):
