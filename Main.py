@@ -96,7 +96,6 @@ class CCGXController(object):
             path=self.DbusServices['AcSetpoint']['Path'],
             eventCallback=None,
             createsignal=False).set_value(inputpower)
-        print 'Inputpower:', inputpower
 
     def run(self):
 
