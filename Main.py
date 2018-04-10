@@ -16,6 +16,7 @@ from vedbus import VeDbusItemExport
 class CCGXController(object):
 
     def __init__(self):
+
         self.bus = dbus.SystemBus()
         self.DbusServices = {
             'AcSetpoint': {'Service': "com.victronenergy.settings",
@@ -51,6 +52,7 @@ class CCGXController(object):
         }
 
     def absorption(self):
+
         if self.AbsorptionSettings['Active'] is False:
             if datetime.date.today() >= self.AbsorptionSettings['Date']:
                 if datetime.datetime.now().time() >= self.AbsorptionSettings['StartTime']:
@@ -69,6 +71,7 @@ class CCGXController(object):
                 print 'Absorption Stopped'
 
     def getvalues(self):
+
         for service in self.DbusServices:
             try:
                 self.DbusServices[service]['Value'] = VeDbusItemImport(
@@ -90,6 +93,7 @@ class CCGXController(object):
                     self.DbusServices[service]['Value'] = self.Settings['StableBatterySoc']
 
     def setvalues(self, inputpower):
+
         VeDbusItemImport(
             bus=self.bus,
             serviceName=self.DbusServices['AcSetpoint']['Service'],
@@ -99,6 +103,7 @@ class CCGXController(object):
         print 'Inputpower:', inputpower
 
     def run(self):
+
         print 'Main loop started'
         WsConnect = False
         InPower = 3000
@@ -114,8 +119,6 @@ class CCGXController(object):
             L2Out = self.DbusServices['L2Power']['Value']
             L3Out = self.DbusServices['L3Power']['Value']
             OutPower = L1Out + L2Out + L3Out
-
-
 
             # Set the correct flag for WsConnect
             if SOC >= self.Settings['WsConSoc']:
