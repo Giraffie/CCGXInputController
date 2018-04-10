@@ -43,6 +43,11 @@ class CCGXController(object):
             'Active': False,
             'Power': 30000
         }
+        self.settings = {
+            'StableBatterySoc': 81,
+            'WsConSoc': 84,
+            'WsDisConSoc': 82
+        }
 
     def absorption(self):
         if self.AbsorptionSettings['Active'] == False:
@@ -79,13 +84,13 @@ class CCGXController(object):
 
 
             try:
-                self.DbusServices[service]['Value'] *= 1
+                self.DbusServices[service]['Value'] = max(self.DbusServices[service]['Value'], 0)
 
             except:
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
-                    self.DbusServices[service]['Value'] = 4000
+                    self.DbusServices[service]['Value'] = 1000
                 elif service == 'Soc':
-                    self.DbusServices[service]['Value'] = 78
+                    self.DbusServices[service]['Value'] = self.settings['StableBatterySoc']
 
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
@@ -107,32 +112,27 @@ class CCGXController(object):
     def run(self):
 
         print 'Main loop started'
-        PrevSOC = 75
-        SOC = 75
         WsConnect = False
         InPower = 3000
-        OutPower = 2000
         MinIn = 200
+        StableBatterySoc = self.settings['StableBatterySoc']
 
         while True:
 
             #Get updated SOC Value
             values = self.getvalues()
-            PrevSOC = SOC
             SOC = values[0]
             L1Out = values[1]
             L2Out = values[2]
             L3Out = values[3]
             OutPower = L1Out + L2Out + L3Out
 
-            WsConSoc = 84
-            StableBatterySoc = 81
 
 
             # Set the correct flag for WsConnect
-            if SOC >= WsConSoc:
+            if SOC >= self.settings['WsConSoc']:
                 WsConnect = True
-            if SOC <= WsConSoc - 2:
+            if SOC <= self.settings['WsDisConSoc']:
                 WsConnect = False
 
             # Set Correct Maxin Value based on if Ws is connected or not
