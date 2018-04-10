@@ -148,14 +148,14 @@ class CCGXController(object):
                 MaxIn = 50000
 
 
-            #Constrain the maximum input power
+            # Constrain the maximum input power
             InPower = min(InPower,MaxIn)
 
-            #Safety mechanism to prevent low input power during high power use
+            # Safety mechanism to prevent low input power during high power use
             if L1Out > 5000 or L2Out > 5000 or L3Out > 5000:
                 MinIn = OutPower - 2000
 
-            #C onstrain the minimum input power
+            # Constrain the minimum input power
             InPower = max(MinIn,InPower)
 
             # Send the inputpower to the CCGX
