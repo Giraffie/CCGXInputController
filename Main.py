@@ -58,7 +58,7 @@ class CCGXController(object):
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
                     self.DbusServices[service]['Value'] = 4000
                 elif service == 'Soc':
-                    self.DbusServices[service]['Value'] = 86
+                    self.DbusServices[service]['Value'] = 78
 
 
         values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
@@ -116,7 +116,7 @@ class CCGXController(object):
                 MaxIn = OutPower + 200
 
             # Determine the correct inputpower
-            if (SOC < StableBatterySoc - 5):
+            if (SOC < StableBatterySoc - 1):
                 InPower = 1.2 * OutPower + 200
             elif SOC == StableBatterySoc:
                 InPower = 1.0 * OutPower + 200
