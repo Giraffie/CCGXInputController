@@ -117,7 +117,8 @@ class CCGXController(object):
                 MaxIn = 2 * OutPower + 200
 
             DayOfWeek = datetime.datetime.today().weekday()
-            print DayOfWeek
+            TimeNow = datetime.datetime.now().time()
+            print TimeNow
 
             # Determine the correct inputpower
             if (SOC < StableBatterySoc - 1):
