@@ -111,9 +111,9 @@ class CCGXController(object):
 
             # Set Correct Maxin Value based on if Ws is connected or not
             if WsConnect == True:
-                MaxIn = 0.4*OutPower + 200
+                MaxIn = 0.4 * OutPower + 200
             else:
-                MaxIn = OutPower + 200
+                MaxIn = 2 * OutPower + 200
 
             # Determine the correct inputpower
             if (SOC < StableBatterySoc - 1):
