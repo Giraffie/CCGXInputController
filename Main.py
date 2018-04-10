@@ -70,27 +70,27 @@ class CCGXController(object):
 
 
 
-def getvalues(self):
+    def getvalues(self):
 
-        for service in self.DbusServices:
-            try:
-                self.DbusServices[service]['Value']= VeDbusItemImport(
-                        bus=self.bus,
-                        serviceName=self.DbusServices[service]['Service'],
-                        path=self.DbusServices[service]['Path'],
-                        eventCallback=None,
-                        createsignal=False).get_value()
-            except dbus.DBusException:
-                print 'Error with DBus'
+            for service in self.DbusServices:
+                try:
+                    self.DbusServices[service]['Value']= VeDbusItemImport(
+                            bus=self.bus,
+                            serviceName=self.DbusServices[service]['Service'],
+                            path=self.DbusServices[service]['Path'],
+                            eventCallback=None,
+                            createsignal=False).get_value()
+                except dbus.DBusException:
+                    print 'Error with DBus'
 
-            try:
-                self.DbusServices[service]['Value'] *= 1
-                self.DbusServices[service]['Value'] = max(self.DbusServices[service]['Value'], 0)
-            except:
-                if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
-                    self.DbusServices[service]['Value'] = 1000
-                elif service == 'Soc':
-                    self.DbusServices[service]['Value'] = self.Settings['StableBatterySoc']
+                try:
+                    self.DbusServices[service]['Value'] *= 1
+                    self.DbusServices[service]['Value'] = max(self.DbusServices[service]['Value'], 0)
+                except:
+                    if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
+                        self.DbusServices[service]['Value'] = 1000
+                    elif service == 'Soc':
+                        self.DbusServices[service]['Value'] = self.Settings['StableBatterySoc']
 
 
     def setvalues(self,inputpower):
