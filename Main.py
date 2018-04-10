@@ -159,7 +159,7 @@ class CCGXController(object):
             self.absorption()
             if self.AbsorptionSettings['Active']:
                 InPower = OutPower + self.AbsorptionSettings['Power']
-                MaxIn = InPower
+                MaxIn = 50000
 
 
             #Constrain the maximum input power
