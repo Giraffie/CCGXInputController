@@ -85,6 +85,7 @@ class CCGXController(object):
 
             try:
                 self.DbusServices[service]['Value'] = max(self.DbusServices[service]['Value'], 0)
+                print service, self.DbusServices[service]['Value']
 
             except:
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
@@ -136,7 +137,7 @@ class CCGXController(object):
                 WsConnect = False
 
             # Set Correct Maxin Value based on if Ws is connected or not
-            if WsConnect == True:
+            if WsConnect is True:
                 MaxIn = 0.4 * OutPower + 200
             else:
                 MaxIn = 2 * OutPower + 200
@@ -155,7 +156,7 @@ class CCGXController(object):
             elif SOC >= StableBatterySoc + 4:
                 InPower = 0.2 * OutPower + 200
 
-            # Set the Absorption power if appliccable
+            # Set the Absorption power if applicable
             self.absorption()
             if self.AbsorptionSettings['Active']:
                 InPower = OutPower + self.AbsorptionSettings['Power']
