@@ -52,11 +52,13 @@ class CCGXController(object):
                         self.AbsorptionSettings['Active'] = True
                         self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
                         self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
+                        print 'Absorption started'
                     else:
                         self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
         else:
             if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
                 self.AbsorptionSettings['Active'] = False
+                print 'Absorption Stopped'
 
 
 
