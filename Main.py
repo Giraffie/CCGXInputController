@@ -95,12 +95,6 @@ class CCGXController(object):
                     self.DbusServices[service]['Value'] = self.settings['StableBatterySoc']
 
 
-        values = [self.DbusServices['Soc']['Value'], self.DbusServices['L1Power']['Value'],
-                  self.DbusServices['L2Power']['Value'], self.DbusServices['L3Power']['Value']]
-
-        #print self.DbusServices['Soc']['Value']
-        return values
-
     def setvalues(self,inputpower):
         VeDbusItemImport(
             bus=self.bus,
@@ -122,11 +116,11 @@ class CCGXController(object):
         while True:
 
             #Get updated SOC Value
-            values = self.getvalues()
-            SOC = values[0]
-            L1Out = values[1]
-            L2Out = values[2]
-            L3Out = values[3]
+            self.getvalues()
+            SOC = self.DbusServices['Soc']['Value']
+            L1Out = self.DbusServices['L1Power']['Value']
+            L2Out = self.DbusServices['L2Power']['Value']
+            L3Out = self.DbusServices['L3Power']['Value']
             OutPower = L1Out + L2Out + L3Out
 
 
