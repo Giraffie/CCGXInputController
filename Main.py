@@ -119,7 +119,7 @@ class CCGXController(object):
             DayOfWeek = datetime.datetime.today().weekday()
             TimeNow = datetime.datetime.now().time()
             if TimeNow > datetime.time(8,30):
-                print 'Greater than'
+                print 'Greater than '
             else:
                 print 'Less than'
 
