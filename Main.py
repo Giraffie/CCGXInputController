@@ -44,7 +44,7 @@ class CCGXController(object):
             'Active': False,
             'Power': 30000
         }
-        self.settings = {
+        self.Settings = {
             'StableBatterySoc': 81,
             'WsConSoc': 84,
             'WsDisConSoc': 82
@@ -90,7 +90,7 @@ def getvalues(self):
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
                     self.DbusServices[service]['Value'] = 1000
                 elif service == 'Soc':
-                    self.DbusServices[service]['Value'] = self.settings['StableBatterySoc']
+                    self.DbusServices[service]['Value'] = self.Settings['StableBatterySoc']
 
 
     def setvalues(self,inputpower):
@@ -109,7 +109,7 @@ def getvalues(self):
         WsConnect = False
         InPower = 3000
         MinIn = 200
-        StableBatterySoc = self.settings['StableBatterySoc']
+        StableBatterySoc = self.Settings['StableBatterySoc']
 
         while True:
 
@@ -124,9 +124,9 @@ def getvalues(self):
 
 
             # Set the correct flag for WsConnect
-            if SOC >= self.settings['WsConSoc']:
+            if SOC >= self.Settings['WsConSoc']:
                 WsConnect = True
-            if SOC <= self.settings['WsDisConSoc']:
+            if SOC <= self.Settings['WsDisConSoc']:
                 WsConnect = False
 
             # Set Correct Maxin Value based on if Ws is connected or not
@@ -136,7 +136,7 @@ def getvalues(self):
                 MaxIn = 2 * OutPower + 200
 
             # Determine the correct inputpower
-            if (SOC < StableBatterySoc - 1):
+            if SOC < StableBatterySoc - 1:
                 InPower = 1.2 * OutPower + 200
             elif SOC == StableBatterySoc:
                 InPower = 1.0 * OutPower + 200
@@ -160,7 +160,7 @@ def getvalues(self):
             InPower = min(InPower,MaxIn)
 
             #Safety mechanism to prevent low input power during high power use
-            if (L1Out > 5000 or L2Out > 5000 or L3Out > 5000):
+            if L1Out > 5000 or L2Out > 5000 or L3Out > 5000:
                 MinIn = OutPower - 2000
 
             #Constrain the minimum input power
