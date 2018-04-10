@@ -56,7 +56,7 @@ class CCGXController(object):
 
             except:
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
-                    self.DbusServices[service]['Value'] = 300
+                    self.DbusServices[service]['Value'] = 6000
                 elif service == 'Soc':
                     self.DbusServices[service]['Value'] = 84
 
