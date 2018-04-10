@@ -33,11 +33,34 @@ class CCGXController(object):
                    'Path':"/Dc/Battery/Soc",
                    'Value':0}
         }
+        self.AbsorptionSettings = {
+            'WeekDay': 6,
+            'StartTime': datetime.time(hour=17),
+            'Duration': datetime.timedelta(hours=8),
+            'Date': datetime.date.today(),
+            'EndTime': datetime.datetime.now(),
+            'Interval': datetime.timedelta(weeks=2),
+            'Active': False,
+            'Power': 30000
+        }
+
+    def absorption(self):
+        if self.AbsorptionSettings['Active'] == False:
+            if datetime.date.today() >= self.AbsorptionSettings['Date']:
+                if datetime.datetime.now().time() >= self.AbsorptionSettings['StartTime']:
+                    if datetime.datetime.now().weekday() == self.AbsorptionSettings['WeekDay']:
+                        self.AbsorptionSettings['Active'] = True
+                        self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
+                        self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
+                    else:
+                        self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
+        else:
+            if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
+                self.AbsorptionSettings['Active'] = False
+
+
 
     def getvalues(self):
-
-        # Services to get values from
-        # Syntax is {'Name':[
 
         for service in self.DbusServices:
 
@@ -88,7 +111,6 @@ class CCGXController(object):
         OutPower = 2000
         MinIn = 200
 
-
         while True:
 
             #Get updated SOC Value
@@ -116,15 +138,6 @@ class CCGXController(object):
             else:
                 MaxIn = 2 * OutPower + 200
 
-            DayOfWeek = datetime.datetime.today().weekday()
-            TimeNow = datetime.datetime.now().time()
-            if TimeNow > datetime.time(6,30):
-                print 'Greater than '
-            else:
-                print 'Less than'
-
-
-
             # Determine the correct inputpower
             if (SOC < StableBatterySoc - 1):
                 InPower = 1.2 * OutPower + 200
@@ -138,6 +151,13 @@ class CCGXController(object):
                 InPower = 0.4 * OutPower + 200
             elif SOC >= StableBatterySoc + 4:
                 InPower = 0.2 * OutPower + 200
+
+            # Set the Absorption power if appliccable
+            self.absorption()
+            if self.AbsorptionSettings['Active']:
+                InPower = OutPower + self.AbsorptionSettings['Power']
+                MaxIn = InPower
+
 
             #Constrain the maximum input power
             InPower = min(InPower,MaxIn)
