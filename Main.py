@@ -5,6 +5,7 @@ import dbus
 import time
 import os
 import sys
+import datetime
 
 # Victron Imports
 sys.path.insert(1, os.path.join(os.path.dirname(__file__), './ext/velib_python'))
@@ -114,6 +115,9 @@ class CCGXController(object):
                 MaxIn = 0.4 * OutPower + 200
             else:
                 MaxIn = 2 * OutPower + 200
+
+            DayOfWeek = datetime.datetime.today().weekday()
+            print DayOfWeek
 
             # Determine the correct inputpower
             if (SOC < StableBatterySoc - 1):
