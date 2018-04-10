@@ -34,7 +34,7 @@ class CCGXController(object):
                    'Value':0}
         }
         self.AbsorptionSettings = {
-            'WeekDay': 1,
+            'WeekDay': 2,
             'StartTime': datetime.time(hour=8, minute=52),
             'Duration': datetime.timedelta(minutes=2),
             'Date': datetime.date.today(),
@@ -61,6 +61,7 @@ class CCGXController(object):
                         print 'New Absorption Date:', self.AbsorptionSettings['Date']
                     else:
                         self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
+                        print 'Absorption scheduled for tomorrow'
         else:
             if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
                 self.AbsorptionSettings['Active'] = False
