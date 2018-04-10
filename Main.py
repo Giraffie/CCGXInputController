@@ -118,7 +118,12 @@ class CCGXController(object):
 
             DayOfWeek = datetime.datetime.today().weekday()
             TimeNow = datetime.datetime.now().time()
-            print TimeNow
+            if TimeNow > datetime.time(8,30):
+                print 'Greater than'
+            else:
+                print 'Less than'
+
+
 
             # Determine the correct inputpower
             if (SOC < StableBatterySoc - 1):
