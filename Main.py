@@ -20,17 +20,17 @@ class CCGXController(object):
         self.bus = dbus.SystemBus()
         self.DbusServices = {
             'AcSetpoint': {'Service': "com.victronenergy.settings",
-                    'Path': "/Settings/CGwacs/AcPowerSetPoint",
-                    'Value': 0},
+                           'Path': "/Settings/CGwacs/AcPowerSetPoint",
+                           'Value': 0},
             'L1Power': {'Service': "com.victronenergy.system",
-                    'Path': "/Ac/Consumption/L1/Power",
-                    'Value': 0},
+                        'Path': "/Ac/Consumption/L1/Power",
+                        'Value': 0},
             'L2Power': {'Service': "com.victronenergy.system",
-                    'Path': "/Ac/Consumption/L2/Power",
-                    'Value': 0},
+                        'Path': "/Ac/Consumption/L2/Power",
+                        'Value': 0},
             'L3Power': {'Service': "com.victronenergy.system",
-                    'Path': "/Ac/Consumption/L3/Power",
-                    'Value': 0},
+                        'Path': "/Ac/Consumption/L3/Power",
+                        'Value': 0},
             'Soc': {'Service': "com.victronenergy.system",
                     'Path': "/Dc/Battery/Soc",
                     'Value': 0}
@@ -112,7 +112,7 @@ class CCGXController(object):
 
         while True:
 
-            #Get updated SOC Value
+            # Get updated SOC Value
             self.getvalues()
             SOC = self.DbusServices['Soc']['Value']
             L1Out = self.DbusServices['L1Power']['Value']
@@ -160,7 +160,7 @@ class CCGXController(object):
             if L1Out > 5000 or L2Out > 5000 or L3Out > 5000:
                 MinIn = OutPower - 2000
 
-            #Constrain the minimum input power
+            #C onstrain the minimum input power
             InPower = max(MinIn,InPower)
 
             # Send the inputpower to the CCGX
