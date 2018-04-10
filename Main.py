@@ -12,26 +12,27 @@ sys.path.insert(1, os.path.join(os.path.dirname(__file__), './ext/velib_python')
 from vedbus import VeDbusItemImport
 from vedbus import VeDbusItemExport
 
+
 class CCGXController(object):
 
     def __init__(self):
         self.bus = dbus.SystemBus()
         self.DbusServices = {
-            'AcSetpoint':{'Service':"com.victronenergy.settings",
-                   'Path':"/Settings/CGwacs/AcPowerSetPoint",
-                   'Value':0},
-            'L1Power':{'Service':"com.victronenergy.system",
-                   'Path':"/Ac/Consumption/L1/Power",
-                   'Value':0},
-            'L2Power': {'Service':"com.victronenergy.system",
-                   'Path':"/Ac/Consumption/L2/Power",
-                   'Value':0},
-            'L3Power':{'Service':"com.victronenergy.system",
-                   'Path':"/Ac/Consumption/L3/Power",
-                   'Value':0},
-            'Soc':{'Service':"com.victronenergy.system",
-                   'Path':"/Dc/Battery/Soc",
-                   'Value':0}
+            'AcSetpoint': {'Service': "com.victronenergy.settings",
+                    'Path': "/Settings/CGwacs/AcPowerSetPoint",
+                    'Value': 0},
+            'L1Power': {'Service': "com.victronenergy.system",
+                    'Path': "/Ac/Consumption/L1/Power",
+                    'Value': 0},
+            'L2Power': {'Service': "com.victronenergy.system",
+                    'Path': "/Ac/Consumption/L2/Power",
+                    'Value': 0},
+            'L3Power': {'Service': "com.victronenergy.system",
+                    'Path': "/Ac/Consumption/L3/Power",
+                    'Value': 0},
+            'Soc': {'Service': "com.victronenergy.system",
+                    'Path': "/Dc/Battery/Soc",
+                    'Value': 0}
         }
         self.AbsorptionSettings = {
             'WeekDay': 2,
@@ -50,7 +51,7 @@ class CCGXController(object):
         }
 
     def absorption(self):
-        if self.AbsorptionSettings['Active'] == False:
+        if self.AbsorptionSettings['Active'] is False:
             if datetime.date.today() >= self.AbsorptionSettings['Date']:
                 if datetime.datetime.now().time() >= self.AbsorptionSettings['StartTime']:
                     if datetime.datetime.now().weekday() == self.AbsorptionSettings['WeekDay']:
@@ -69,10 +70,9 @@ class CCGXController(object):
 
 
 
-    def getvalues(self):
+def getvalues(self):
 
         for service in self.DbusServices:
-
             try:
                 self.DbusServices[service]['Value']= VeDbusItemImport(
                         bus=self.bus,
