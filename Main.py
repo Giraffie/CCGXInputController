@@ -36,7 +36,7 @@ class CCGXController(object):
                     'Value': 0}
         }
         self.AbsorptionSettings = {
-            'WeekDay': 2,
+            'WeekDay': 6,
             'StartTime': datetime.time(hour=17, minute=0),
             'Duration': datetime.timedelta(hours=8),
             'Date': datetime.date.today(),
