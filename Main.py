@@ -163,7 +163,6 @@ class CCGXController(object):
             # Send the inputpower to the CCGX
             self.setvalues(InPower)
 
-
             time.sleep(2)
 
 
