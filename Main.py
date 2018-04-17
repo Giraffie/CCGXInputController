@@ -49,7 +49,7 @@ class CCGXController(object):
             'StableBatterySoc': 80,
             'WsConSoc': 84,
             'WsDisConSoc': 82,
-            'MinInPower': 450,
+            'MinInPower': 600,
             'MaxInPower': 50000
         }
 
