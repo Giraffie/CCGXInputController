@@ -130,7 +130,7 @@ class CCGXController(object):
                 MaxIn = 2 * OutPower + 200
 
             # Determine the correct inputpower
-            if SOC < StableBatterySoc - 1:
+            if SOC <= StableBatterySoc - 1:
                 InPower = 1.2 * OutPower + 200
             elif SOC == StableBatterySoc:
                 InPower = 1.0 * OutPower + 200
