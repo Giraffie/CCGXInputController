@@ -48,7 +48,9 @@ class CCGXController(object):
         self.Settings = {
             'StableBatterySoc': 80,
             'WsConSoc': 84,
-            'WsDisConSoc': 82
+            'WsDisConSoc': 82,
+            'MinInPower': 600,
+            'MaxInPower': 50000
         }
 
     def absorption(self):
@@ -145,7 +147,7 @@ class CCGXController(object):
             self.absorption()
             if self.AbsorptionSettings['Active']:
                 InPower = OutPower + self.AbsorptionSettings['Power']
-                MaxIn = 50000
+                MaxIn = self.Settings['MaxInPower']
 
 
             # Constrain the maximum input power
@@ -155,7 +157,7 @@ class CCGXController(object):
             if L1Out > 5000 or L2Out > 5000 or L3Out > 5000:
                 MinIn = OutPower - 2000
             else:
-                MinIn = 200
+                MinIn = self.Settings['MinInPower']
 
             # Constrain the minimum input power
             InPower = max(MinIn,InPower)
