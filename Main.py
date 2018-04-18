@@ -135,16 +135,10 @@ class CCGXController(object):
             # Determine the correct inputpower
             if SOC <= StableBatterySoc - 1:
                 InPower = 1.2 * OutPower + 200
-            elif SOC == StableBatterySoc:
-                InPower = 1.0 * OutPower + 200
-            elif SOC == StableBatterySoc + 1:
-                InPower = 0.8 * OutPower + 200
-            elif SOC == StableBatterySoc + 2:
-                InPower = 0.6 * OutPower + 200
-            elif SOC == StableBatterySoc + 3:
-                InPower = 0.4 * OutPower + 200
             elif SOC >= StableBatterySoc + 4:
                 InPower = 0.2 * OutPower + 200
+            else:
+                InPower = OutPower * (1 - (SOC - StableBatterySoc) * 0.2) + 200
 
             # Set the Absorption power if applicable
             self.absorption()
