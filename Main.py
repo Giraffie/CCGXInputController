@@ -87,8 +87,10 @@ class CCGXController(object):
             except:
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
                     self.DbusServices[service]['Value'] = 1000
+                    print 'No value on:', service
                 elif service == 'Soc':
                     self.DbusServices[service]['Value'] = self.Settings['StableBatterySoc']
+                    print 'No value on:', service
 
     def setvalues(self, inputpower):
 
