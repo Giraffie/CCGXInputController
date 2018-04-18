@@ -46,7 +46,7 @@ class CCGXController(object):
             'Power': 30000
         }
         self.Settings = {
-            'StableBatterySoc': 80,
+            'StableBatterySoc': 81,
             'WsConSoc': 84,
             'WsDisConSoc': 82,
             'MinInPower': 600,
