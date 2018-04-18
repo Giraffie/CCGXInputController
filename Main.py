@@ -78,7 +78,7 @@ class CCGXController(object):
                         path=self.DbusServices[service]['Path'],
                         eventCallback=None,
                         createsignal=False).get_value()
-                print 'New value of ', self.DbusServices[service]['Value'], 'for', service
+                # print 'New value of ', self.DbusServices[service]['Value'], 'for', service
             except dbus.DBusException:
                 print 'Error with DBus'
 
@@ -88,10 +88,10 @@ class CCGXController(object):
             except:
                 if service == 'L1Power' or service == 'L2Power' or service == 'L3Power':
                     self.DbusServices[service]['Value'] = 1000
-                    print 'No value on:', service
+                    # print 'No value on:', service
                 elif service == 'Soc':
                     self.DbusServices[service]['Value'] = self.Settings['StableBatterySoc']
-                    print 'No value on:', service
+                    # print 'No value on:', service
 
     def setvalues(self, inputpower):
 
