@@ -152,7 +152,7 @@ class CCGXController(object):
 
             # Safety mechanism to prevent low input power during high power use
             if L1Out > 5000 or L2Out > 5000 or L3Out > 5000:
-                MinIn = OutPower - 2000
+                MinIn = OutPower - 4000
             else:
                 MinIn = self.Settings['MinInPower']
 
