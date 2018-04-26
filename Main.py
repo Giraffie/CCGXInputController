@@ -46,7 +46,7 @@ class CCGXController(object):
             'Power': 30000
         }
         self.Settings = {
-            'StableBatterySoc': 80,
+            'StableBatterySoc': 79,
             'WsConSoc': 84,
             'WsDisConSoc': 82,
             'MinInPower': 600,
@@ -158,7 +158,7 @@ class CCGXController(object):
 
             # Safety mechanism to prevent low input power during high power use
             if L1Out > 5000 or L2Out > 5000 or L3Out > 5000:
-                MinIn = OutPower - 2000
+                MinIn = OutPower - 4000
             else:
                 MinIn = self.Settings['MinInPower']
 
