@@ -50,7 +50,9 @@ class CCGXController(object):
             'WsConSoc': 84,
             'WsDisConSoc': 82,
             'MinInPower': 600,
-            'MaxInPower': 50000
+            'MaxInPower': 50000,
+            'WeekendStableBatterySoc': 75,
+            'WeekendStartTime': datetime.time(hour=7, minute=0)
         }
 
     def absorption(self):
@@ -106,9 +108,6 @@ class CCGXController(object):
 
         print 'Main loop started'
         WsConnect = False
-        InPower = 3000
-        MinIn = 200
-        StableBatterySoc = self.Settings['StableBatterySoc']
 
         while True:
 
@@ -119,6 +118,13 @@ class CCGXController(object):
             L2Out = self.DbusServices['L2Power']['Value']
             L3Out = self.DbusServices['L3Power']['Value']
             OutPower = L1Out + L2Out + L3Out
+
+            # Set StableBatterySoc
+            if datetime.datetime.now().weekday() >= 5:
+                if datetime.datetime.now().time() >= self.Settings['WeekendStartTime']:
+                    StableBatterySoc = self.Settings['WeekendStableBatterySoc']
+            else:
+                StableBatterySoc = self.Settings['StableBatterySoc']
 
             # Set the correct flag for WsConnect
             if SOC >= self.Settings['WsConSoc']:
