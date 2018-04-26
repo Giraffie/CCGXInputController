@@ -47,6 +47,7 @@ class CCGXController(object):
         }
         self.Settings = {
             'StableBatterySoc': 79,
+            '20%PowerSoc': 83,
             'WsConSoc': 84,
             'WsDisConSoc': 82,
             'MinInPower': 600,
@@ -139,12 +140,14 @@ class CCGXController(object):
                 MaxIn = 2 * OutPower + 200
 
             # Determine the correct inputpower
+            Powerslope = (1 - 0.2) / (self.Settings['20%PowerSoc'] - StableBatterySoc)
+
             if SOC <= StableBatterySoc - 1:
                 InPower = 1.2 * OutPower + 200
-            elif SOC >= StableBatterySoc + 4:
+            elif SOC >= self.Settings['20%PowerSoc']:
                 InPower = 0.2 * OutPower + 200
             else:
-                InPower = OutPower * (1 - (SOC - StableBatterySoc) * 0.2) + 200
+                InPower = OutPower * (1 - (SOC - StableBatterySoc) * Powerslope) + 200
 
             # Set the Absorption power if applicable
             self.absorption()
