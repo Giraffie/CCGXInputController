@@ -54,7 +54,7 @@ class CCGXController(object):
             'MinInPower': 600,
             'MaxInPower': 50000,
             'WeekendStableBatterySoc': 75,
-            'WeekendStartTime': datetime.time(hour=19, minute=0)
+            'WeekendStartTime': datetime.time(hour=15, minute=0)
         }
 
     def absorption(self):
