@@ -36,6 +36,7 @@ class CCGXController(object):
                     'Value': 0}
         }
         self.AbsorptionSettings = {
+            'DoAbsorption': False,
             'WeekDay': 6,
             'StartTime': datetime.time(hour=17, minute=0),
             'Duration': datetime.timedelta(hours=8),
@@ -57,19 +58,19 @@ class CCGXController(object):
         }
 
     def absorption(self):
-
-        if self.AbsorptionSettings['Active'] is False:
-            if datetime.date.today() >= self.AbsorptionSettings['Date']:
-                if datetime.datetime.now().time() >= self.AbsorptionSettings['StartTime']:
-                    if datetime.datetime.now().weekday() == self.AbsorptionSettings['WeekDay']:
-                        self.AbsorptionSettings['Active'] = True
-                        self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
-                        self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
-                    else:
-                        self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
-        else:
-            if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
-                self.AbsorptionSettings['Active'] = False
+        if self.AbsorptionSettings['DoAbsorption'] is True:
+            if self.AbsorptionSettings['Active'] is False:
+                if datetime.date.today() >= self.AbsorptionSettings['Date']:
+                    if datetime.datetime.now().time() >= self.AbsorptionSettings['StartTime']:
+                        if datetime.datetime.now().weekday() == self.AbsorptionSettings['WeekDay']:
+                            self.AbsorptionSettings['Active'] = True
+                            self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
+                            self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
+                        else:
+                            self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
+            else:
+                if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
+                    self.AbsorptionSettings['Active'] = False
 
     def getvalues(self):
 
