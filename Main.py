@@ -110,6 +110,7 @@ class CCGXController(object):
 
         print 'Main loop started'
         WsConnect = False
+        StableBatterySoc = self.Settings['StableBatterySoc']
 
         while True:
 
