@@ -22,6 +22,9 @@ class CCGXController(object):
             'AcSetpoint': {'Service': "com.victronenergy.settings",
                            'Path': "/Settings/CGwacs/AcPowerSetPoint",
                            'Value': 0},
+            'CCGXRelay': {'Service': "com.victronenergy.system",
+                           'Path': "/Relay/0/State",
+                           'Value': 0},
             'L1Power': {'Service': "com.victronenergy.system",
                         'Path': "/Ac/Consumption/L1/Power",
                         'Value': 0},
@@ -66,11 +69,13 @@ class CCGXController(object):
                             self.AbsorptionSettings['Active'] = True
                             self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
                             self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
+                            self.setrelay(1)
                         else:
                             self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
             else:
                 if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
                     self.AbsorptionSettings['Active'] = False
+                    self.setrelay(0)
 
     def getvalues(self):
 
@@ -106,11 +111,21 @@ class CCGXController(object):
             eventCallback=None,
             createsignal=False).set_value(inputpower)
 
+    def setrelay(self, relayvalue):
+
+        VeDbusItemImport(
+            bus=self.bus,
+            serviceName=self.DbusServices['CCGXRelay']['Service'],
+            path=self.DbusServices['CCGXRelay']['Path'],
+            eventCallback=None,
+            createsignal=False).set_value(relayvalue)
+
     def run(self):
 
         print 'Main loop started'
         WsConnect = False
         StableBatterySoc = self.Settings['StableBatterySoc']
+        self.setrelay(0)
 
         while True:
 
