@@ -39,7 +39,7 @@ class CCGXController(object):
                     'Value': 0}
         }
         self.AbsorptionSettings = {
-            'DoAbsorption': False,
+            'DoAbsorption': True,
             'WeekDay': 6,
             'StartTime': datetime.time(hour=17, minute=0),
             'Duration': datetime.timedelta(hours=8),
@@ -56,7 +56,7 @@ class CCGXController(object):
             'WsDisConSoc': 82,
             'MinInPower': 600,
             'MaxInPower': 50000,
-            'WeekendStableBatterySoc': 75,
+            'WeekendStableBatterySoc': 79,
             'WeekendStartTime': datetime.time(hour=15, minute=0)
         }
 
@@ -69,13 +69,13 @@ class CCGXController(object):
                             self.AbsorptionSettings['Active'] = True
                             self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
                             self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
-                            self.setrelay(1)
+                            self.setrelay(0)
                         else:
                             self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
             else:
                 if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
                     self.AbsorptionSettings['Active'] = False
-                    self.setrelay(0)
+                    self.setrelay(1)
 
     def getvalues(self):
 
@@ -125,7 +125,7 @@ class CCGXController(object):
         print 'Main loop started'
         WsConnect = False
         StableBatterySoc = self.Settings['StableBatterySoc']
-        self.setrelay(0)
+        self.setrelay(1)
 
         while True:
 
