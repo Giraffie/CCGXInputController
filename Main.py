@@ -59,7 +59,7 @@ class CCGXController(object):
             'WeekendStableBatterySoc': 79,
             'WeekendStartTime': datetime.time(hour=15, minute=0),
             'SafetyDuration': datetime.timedelta(minutes=5),
-            'SaetyEndTime': datetime.datetime.now()
+            'SafetyEndTime': datetime.datetime.now()
         }
 
     def absorption(self):
