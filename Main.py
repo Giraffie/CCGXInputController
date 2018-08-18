@@ -22,6 +22,9 @@ class CCGXController(object):
             'AcSetpoint': {'Service': "com.victronenergy.settings",
                            'Path': "/Settings/CGwacs/AcPowerSetPoint",
                            'Value': 0},
+            'CCGXRelay': {'Service': "com.victronenergy.system",
+                           'Path': "/Relay/0/State",
+                           'Value': 0},
             'L1Power': {'Service': "com.victronenergy.system",
                         'Path': "/Ac/Consumption/L1/Power",
                         'Value': 0},
@@ -36,6 +39,7 @@ class CCGXController(object):
                     'Value': 0}
         }
         self.AbsorptionSettings = {
+            'DoAbsorption': True,
             'WeekDay': 6,
             'StartTime': datetime.time(hour=17, minute=0),
             'Duration': datetime.timedelta(hours=8),
@@ -47,29 +51,33 @@ class CCGXController(object):
         }
         self.Settings = {
             'StableBatterySoc': 79,
-            '20%PowerSoc': 83,
+            '20%PowerSoc': 85,
             'WsConSoc': 84,
             'WsDisConSoc': 82,
             'MinInPower': 600,
             'MaxInPower': 50000,
-            'WeekendStableBatterySoc': 75,
-            'WeekendStartTime': datetime.time(hour=7, minute=0)
+            'WeekendStableBatterySoc': 79,
+            'WeekendStartTime': datetime.time(hour=15, minute=0),
+            'SafetyDuration': datetime.timedelta(minutes=5),
+            'SafetyEndTime': datetime.datetime.now()
         }
 
     def absorption(self):
-
-        if self.AbsorptionSettings['Active'] is False:
-            if datetime.date.today() >= self.AbsorptionSettings['Date']:
-                if datetime.datetime.now().time() >= self.AbsorptionSettings['StartTime']:
-                    if datetime.datetime.now().weekday() == self.AbsorptionSettings['WeekDay']:
-                        self.AbsorptionSettings['Active'] = True
-                        self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
-                        self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
-                    else:
-                        self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
-        else:
-            if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
-                self.AbsorptionSettings['Active'] = False
+        if self.AbsorptionSettings['DoAbsorption'] is True:
+            if self.AbsorptionSettings['Active'] is False:
+                if datetime.date.today() >= self.AbsorptionSettings['Date']:
+                    if datetime.datetime.now().time() >= self.AbsorptionSettings['StartTime']:
+                        if datetime.datetime.now().weekday() == self.AbsorptionSettings['WeekDay']:
+                            self.AbsorptionSettings['Active'] = True
+                            self.AbsorptionSettings['EndTime'] = datetime.datetime.now() + self.AbsorptionSettings['Duration']
+                            self.AbsorptionSettings['Date'] += self.AbsorptionSettings['Interval']
+                            self.setrelay(0)
+                        else:
+                            self.AbsorptionSettings['Date'] += datetime.timedelta(days=1)
+            else:
+                if datetime.datetime.now() >= self.AbsorptionSettings['EndTime']:
+                    self.AbsorptionSettings['Active'] = False
+                    self.setrelay(1)
 
     def getvalues(self):
 
@@ -105,10 +113,21 @@ class CCGXController(object):
             eventCallback=None,
             createsignal=False).set_value(inputpower)
 
+    def setrelay(self, relayvalue):
+
+        VeDbusItemImport(
+            bus=self.bus,
+            serviceName=self.DbusServices['CCGXRelay']['Service'],
+            path=self.DbusServices['CCGXRelay']['Path'],
+            eventCallback=None,
+            createsignal=False).set_value(relayvalue)
+
     def run(self):
 
         print 'Main loop started'
         WsConnect = False
+        StableBatterySoc = self.Settings['StableBatterySoc']
+        self.setrelay(1)
 
         while True:
 
@@ -120,8 +139,8 @@ class CCGXController(object):
             L3Out = self.DbusServices['L3Power']['Value']
             OutPower = L1Out + L2Out + L3Out
 
-            # Set StableBatterySoc
-            if datetime.datetime.now().weekday() >= 5:
+            # Set StableBatterySoc depending on weekday
+            if datetime.datetime.now().weekday() >= 4:
                 if datetime.datetime.now().time() >= self.Settings['WeekendStartTime']:
                     StableBatterySoc = self.Settings['WeekendStableBatterySoc']
             else:
@@ -143,7 +162,7 @@ class CCGXController(object):
             Powerslope = (1 - 0.2) / (self.Settings['20%PowerSoc'] - StableBatterySoc)
 
             if SOC <= StableBatterySoc - 1:
-                InPower = 1.2 * OutPower + 200
+                InPower = 1.4 * OutPower + 200
             elif SOC >= self.Settings['20%PowerSoc']:
                 InPower = 0.2 * OutPower + 200
             else:
@@ -162,8 +181,13 @@ class CCGXController(object):
             # Safety mechanism to prevent low input power during high power use
             if L1Out > 5000 or L2Out > 5000 or L3Out > 5000:
                 MinIn = OutPower - 4000
+                self.Settings['SafetyEndTime'] = datetime.datetime.now() + self.Settings['SafetyDuration']
+                self.setrelay(0)
             else:
                 MinIn = self.Settings['MinInPower']
+                if self.Settings['SafetyEndTime'] < datetime.datetime.now():
+                    if self.AbsorptionSettings['Active'] == False:
+                        self.setrelay(1)
 
             # Constrain the minimum input power
             InPower = max(MinIn,InPower)
