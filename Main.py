@@ -164,8 +164,7 @@ class CCGXController(object):
             Powerslope = (1 - 0.2) / (self.Settings['20%PowerSoc'] - StableBatterySoc)
 
             if SOC <= StableBatterySoc - 1:
-                InPower = ( (StableBatterySoc - SOC) / 100 ) *\
-                          ( self.Settings['BatteryCapacity'] /self.Settings['LowBatteryRechargeTime'])
+                InPower = ( (StableBatterySoc - SOC) / 100 ) * ( self.Settings['BatteryCapacity'] /self.Settings['LowBatteryRechargeTime'])
             elif SOC >= self.Settings['20%PowerSoc']:
                 InPower = 0.2 * OutPower + 200
             else:
