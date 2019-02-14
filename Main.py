@@ -51,7 +51,7 @@ class CCGXController(object):
         }
         self.Settings = {
             'BatteryCapacity': 155000,
-            'LowBatteryRechargeTime': 4,
+            'LowBatteryRechargeTime': 7,
             'StableBatterySoc': 79,
             '20%PowerSoc': 85,
             'WsConSoc': 84,
@@ -158,7 +158,7 @@ class CCGXController(object):
             if WsConnect is True:
                 MaxIn = 0.4 * OutPower + 200
             else:
-                MaxIn = 2 * OutPower + 200
+                MaxIn = self.Settings['MaxInPower']
 
             # Determine the correct inputpower
             Powerslope = (1 - 0.2) / (self.Settings['20%PowerSoc'] - StableBatterySoc)
